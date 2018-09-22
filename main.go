@@ -2,39 +2,37 @@ package main
 
 import (
 	"net/http"
+
 	"github.com/labstack/echo"
 )
 
 type (
 	board [][]int
 
-	move struct{
-		Position [2]int `json:"pos"` // [x,y] 
-		Action 	 string	`json:"action"` //add, remove, pass, forfeit?
-		Player 	 bool 	`json:"player"`
+	move struct {
+		Position [2]int `json:"pos"`    // [x,y]
+		Action   string `json:"action"` //add, remove, pass, forfeit?
+		Player   bool   `json:"player"`
 	}
 
-	match struct{
+	match struct {
 		// ID string `json:"id"` //already the key on the matches
-		Players [2]int 	`json:"player_ids"`
-		Board   board 	`json:"board"`
-		history []move 	`json:"history"`
+		Players [2]int  `json:"player_ids"`
+		Board   board   `json:"board"`
+		History []move  `json:"history"`
 		Score   [2]uint `json:"score"`
 	}
 
-	status struct{
-		State int 		`json:"state`
-		Board board 	`json:"board"`
-		Last  bool		`json:"last_player`
+	status struct {
+		State int   `json:"state"`
+		Board board `json:"board"`
+		Last  bool  `json:"last_player"`
 	}
-
 )
 
-var (
-	matches = map[string]match
-)
+var matches map[string]match
 
-// to-do: 
+// to-do:
 //  [] refactor functions out of router config call
 // 	[] game logic
 // 	[] tests
@@ -49,12 +47,11 @@ func main() {
 	})
 	//to-do: register new user, add it to the list and change match state (cookies?)
 	e.POST("/matches/:id/join", func(c echo.Context) error {
-		if true/*actual check to see if the user is allowed to join*/{
+		if true /*actual check to see if the user is allowed to join*/ {
 			return c.String(http.StatusAccepted, "join"+c.Param("id"))
-		}else{
-			return c.String(http.StatusNoContent, "join"+c.Param("id"))
 		}
-	//https://godoc.org/net/http#pkg-constants
+		return c.String(http.StatusNoContent, "join"+c.Param("id"))
+		//https://godoc.org/net/http#pkg-constants
 	})
 	/*
 		to-do: return match status {
